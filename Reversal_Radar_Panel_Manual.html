@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Reversal Radar パネルガイド</title>
+<style>
+:root{
+  --bg:#0b0f14; --panel:#111826; --card:#0f1623; --text:#e8eef7; --muted:#a9b4c3;
+  --line:#273245; --accent:#ffd166; --accent2:#7bdff2; --good:#7CFFB2; --warn:#ffb703; --bad:#ff5d5d;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Meiryo UI", sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(1200px 800px at 20% 0%, #111c2f 0%, var(--bg) 55%); color:var(--text); font-family:var(--sans);}
+a{color:var(--accent2)}
+.wrap{max-width:980px;margin:0 auto;padding:22px 16px 44px}
+header{display:flex;gap:14px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;margin-bottom:14px}
+h1{margin:0;font-size:20px;letter-spacing:.2px}
+.badge{display:inline-flex;gap:8px;align-items:center;padding:6px 10px;border:1px solid var(--line);border-radius:999px;background:rgba(17,24,38,.75);color:var(--muted);font-size:12px}
+.grid{display:grid;grid-template-columns:1.2fr .8fr;gap:14px}
+@media (max-width:900px){.grid{grid-template-columns:1fr}}
+.card{background:linear-gradient(180deg, rgba(17,24,38,.92), rgba(15,22,35,.88));border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:0 12px 30px rgba(0,0,0,.28)}
+.card h2{margin:0 0 10px;font-size:15px}
+p{margin:8px 0;color:var(--text);line-height:1.65}
+.small{color:var(--muted);font-size:12px;line-height:1.55}
+.kbd{font-family:var(--mono);padding:2px 6px;border:1px solid var(--line);border-radius:6px;background:rgba(255,255,255,.03);color:var(--text);font-size:12px}
+hr{border:none;border-top:1px solid var(--line);margin:12px 0}
+ul{margin:8px 0 0 18px;color:var(--text)}
+li{margin:6px 0;line-height:1.55}
+.pill{display:inline-flex;gap:8px;align-items:center;border:1px solid var(--line);border-radius:999px;padding:4px 10px;background:rgba(255,255,255,.03);color:var(--muted);font-size:12px;margin:3px 6px 0 0}
+.tbl{width:100%;border-collapse:separate;border-spacing:0;overflow:hidden;border-radius:12px;border:1px solid var(--line);background:rgba(0,0,0,.12)}
+.tbl th,.tbl td{padding:10px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+.tbl th{text-align:left;color:var(--muted);font-weight:600;background:rgba(255,255,255,.03)}
+.tbl tr:last-child td{border-bottom:none}
+.tag{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.callout{padding:12px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.03)}
+.callout strong{color:var(--accent)}
+.figure{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#0a0f18}
+.figure img{display:block;width:100%;height:auto}
+.caption{padding:10px 12px;color:var(--muted);font-size:12px}
+.steps{display:grid;gap:10px}
+.step{display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:flex-start}
+.num{width:28px;height:28px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+background:rgba(255,255,255,.04);border:1px solid var(--line);color:var(--accent);font-weight:700}
+.mini{font-size:13px}
+.good{color:var(--good)}
+.warn{color:var(--warn)}
+.bad{color:var(--bad)}
+footer{margin-top:16px;color:var(--muted);font-size:12px}
+code{font-family:var(--mono);font-size:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Reversal Radar（反転レーダー）パネルガイド</h1>
+      <div class="small">M5の状態をまとめて「反転しやすさ」を見える化し、M1エントリー判断の迷いを減らすためのHUD（常駐パネル）</div>
+    </div>
+    <div class="badge">版: お友達向け / 矢印・アラートなし（no arrows/alerts）</div>
+  </header>
+
+  <div class="grid">
+    <section class="card">
+      <h2>1. 何ができる？（What）</h2>
+      <p>このパネルは、<b>M5（5分足）</b>の複数要素を統合して「そろそろ反転しやすいか？」を <b>Score（総合評価）</b>で示します。実際に狙うのは<b>M1（1分足）</b>で、判断材料はM5側を使います。</p>
+      <div class="callout">
+        <strong>使いどころ：</strong>
+        「いま反転を狙うべきか／まだ早いか」を、毎回同じ目線でチェックするための“レーダー”です。
+      </div>
+
+      <hr/>
+      <h2>2. なぜこの組み合わせ？（Why）</h2>
+      <p>反転（reversal）は「1つの指標だけ」だとダマシ（false signal）が増えがちです。役割が違う指標を重ねて、<b>一致（confluence）</b>が取れた時だけスコアが上がる設計にしています。</p>
+
+      <div>
+        <span class="pill">RSI（relative strength index）= 勢い/過熱</span>
+        <span class="pill">CCI（commodity channel index）= 行き過ぎ/戻りやすさ</span>
+        <span class="pill">VWAP（volume weighted average price）= 平均価格への回帰</span>
+        <span class="pill">ATR（average true range）= 伸び過ぎの物差し</span>
+      </div>
+
+      <p class="small">たとえ話（analogy）: 反転探しは「体温計だけ」で風邪を判断するのに似ています。体温（RSI）に加えて、喉の痛み（CCI）や倦怠感（VWAP乖離）、活動量（ATR）も見ると精度が上がります。</p>
+    </section>
+
+    <aside class="card">
+      <h2>パネル例（スクショ）</h2>
+      <div class="figure">
+        <img src="data:image/png;base64,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" alt="Reversal Radar panel example"/>
+        <div class="caption">表示例：Score / Phase / Dir と、OE・DEV・LOSS のバー、下段に RSI/CCI/VWAP。</div>
+      </div>
+
+      <hr/>
+      <h2>基本の読み方（最短）</h2>
+      <div class="steps">
+        <div class="step"><div class="num">1</div><div class="mini"><b>Score</b>を見る（まずここ）</div></div>
+        <div class="step"><div class="num">2</div><div class="mini"><b>Phase</b>で段階を確認</div></div>
+        <div class="step"><div class="num">3</div><div class="mini"><b>Dir</b>が出ていれば方向の候補</div></div>
+        <div class="step"><div class="num">4</div><div class="mini">OE/DEV/LOSS の「どれが強いか」を見る</div></div>
+      </div>
+    </aside>
+  </div>
+
+  <section class="card" style="margin-top:14px">
+    <h2>3. パネル項目の意味（How：見方）</h2>
+
+    <table class="tbl" aria-label="panel fields">
+      <thead>
+        <tr>
+          <th style="width:210px">表示</th>
+          <th>意味</th>
+          <th style="width:280px">プロの使い方（コツ）</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>Score = XX%</b><div class="tag">総合評価（overall score）</div></td>
+          <td>反転しやすさの合成スコア。複数条件が揃うほど上がります。</td>
+          <td>
+            <ul>
+              <li><span class="bad">0–40%</span>：まだ早い（様子見）</li>
+              <li><span class="warn">40–70%</span>：警戒（候補を探す）</li>
+              <li><span class="good">70%+</span>：準備OK（形が出たら狙う）</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td><b>Phase = NORMAL / WATCH / PREPARE</b><div class="tag">段階（phase）</div></td>
+          <td>反転が近い“段階”の表示。Scoreだけでなく、段階の変化も見えます。</td>
+          <td>
+            <ul>
+              <li><b>NORMAL</b>：通常。反転探しより相場観維持。</li>
+              <li><b>WATCH</b>：意識開始。「形」待ち。</li>
+              <li><b>PREPARE</b>：準備段階。M1で反転サインが出やすい。</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td><b>Dir = BUY / SELL / —</b><div class="tag">方向（direction）</div></td>
+          <td>方向性の候補。確信が弱い時は <b>—（中立）</b> を表示します。</td>
+          <td>— の時に無理に方向を決めないのが大事。MAや水平線など“別根拠”が揃うまで待つ。</td>
+        </tr>
+        <tr>
+          <td><b>OE</b>（Over Extension）<div class="tag">行き過ぎ度</div></td>
+          <td>RSI/CCIを中心に「やり過ぎ」を数値化。バーが伸びるほど過熱。</td>
+          <td>OEが先行して伸び、遅れてDEVが伸びる形は“反転準備”になりやすい。</td>
+        </tr>
+        <tr>
+          <td><b>DEV</b>（Deviation）<div class="tag">乖離（deviation）</div></td>
+          <td>VWAPからの乖離をATRで正規化。右の <code>(x.xx ATR)</code> は乖離量。</td>
+          <td>目安：<b>1.5ATR以上</b>は行き過ぎ。<b>2.0ATR以上</b>は反転候補として強い。</td>
+        </tr>
+        <tr>
+          <td><b>LOSS</b>（Momentum loss）<div class="tag">勢い低下</div></td>
+          <td>伸び続けていた勢いが落ちてきたサイン。反転の“最後のひと押し”になりやすい。</td>
+          <td>LOSSが上がってきたら、M1で「戻りの失速→反発」を探す（逆張りの安全度が上がる）。</td>
+        </tr>
+        <tr>
+          <td><b>RSI / CCI / VWAP</b><div class="tag">内部の生値</div></td>
+          <td>内部状態の確認用。普段は見なくてもOK。</td>
+          <td>検証時だけ参照。例えば「Score高いのにRSIが普通」なら、DEV寄りで上がっている等が分かる。</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <hr/>
+    <h2>4. 実戦の流れ（M1で狙う手順）</h2>
+    <div class="steps">
+      <div class="step"><div class="num">1</div><div>
+        <p><b>M5のScore/Phase</b>で“候補時間”を絞る（フィルター）。</p>
+        <p class="small">例：Scoreが <b>70%+</b> で Phaseが <b>PREPARE</b> なら、M1で形待ちに入る。</p>
+      </div></div>
+      <div class="step"><div class="num">2</div><div>
+        <p><b>M1の形（price action）</b>で入る。</p>
+        <p class="small">たとえば：急伸後の失速、戻りの弱さ、ダブルトップ/ボトム、ヒゲ反転など。</p>
+      </div></div>
+      <div class="step"><div class="num">3</div><div>
+        <p>“やってはいけない”を避ける。</p>
+        <ul class="small">
+          <li><b>Score低いのに逆張り</b>（根拠が薄い）</li>
+          <li><b>Dirが—のまま即断</b>（方向が未成熟）</li>
+          <li><b>強トレンドの順張り局面で反転狙い</b>（戻りが浅い）</li>
+        </ul>
+      </div></div>
+    </div>
+
+    <hr/>
+    <h2>5. Pros / Cons（メリット / デメリット）</h2>
+    <div class="grid" style="grid-template-columns:1fr 1fr">
+      <div class="callout">
+        <p><b class="good">Pros</b></p>
+        <ul>
+          <li>「今は反転を探す時間か？」が一目で分かる</li>
+          <li>指標の役割分担でダマシを減らしやすい</li>
+          <li>M1の“形”待ちに集中できる（迷いが減る）</li>
+        </ul>
+      </div>
+      <div class="callout">
+        <p><b class="warn">Cons</b></p>
+        <ul>
+          <li>スコアが高くても“必ず反転”ではない（確率の話）</li>
+          <li>強トレンド中は逆張りが難しくなる（戻りが浅い）</li>
+          <li>使いこなしは「M1の形」とセットが前提</li>
+        </ul>
+      </div>
+    </div>
+
+    <hr/>
+    <h2>6. よくある質問（FAQ）</h2>
+    <div class="callout">
+      <p><b>Q. Dir が — のままの時は？</b><br/>
+      A. 正常です。方向が固まっていない時は出しません。<b>—</b>の時はM1の形が出るまで待つのが安全です。</p>
+      <p><b>Q. DEVの (x.xx ATR) は何？</b><br/>
+      A. VWAPからの距離を「今の値幅（ATR）」で割った量です。<b>2.0ATR</b>は“行き過ぎ”として強め。</p>
+    </div>
+
+    <hr/>
+    <h2>7. 推奨の初期設定（タカエ版）</h2>
+    <div class="callout">
+      <p class="small">パネル位置（コンパクト・左下）</p>
+      <ul class="small">
+        <li><b>PanelCorner=2</b>（左下） / PanelX=8 / PanelY=8</li>
+        <li>PanelW=270 / PanelH=118</li>
+        <li>FontTitle=9 / FontBody=9 / FontName=Meiryo UI</li>
+      </ul>
+    </div>
+
+    <hr/>
+    <h2>Key Takeaways（要点まとめ）</h2>
+    <ul>
+      <li>このパネルは「M5の反転しやすさ」をまとめたレーダー</li>
+      <li>エントリーはM1で、Score/Phaseで“時間帯”を絞る</li>
+      <li>Dirが—の時は無理しない（待つほど強い）</li>
+      <li>OE=過熱、DEV=乖離、LOSS=勢い低下。3つの組み合わせで精度が上がる</li>
+    </ul>
+  </section>
+
+  <footer>
+    <div>※ この資料は「使い方の理解」を目的としたガイドです。相場は常に変化し、損失リスクがあります。</div>
+  </footer>
+</div>
+</body>
+</html>
